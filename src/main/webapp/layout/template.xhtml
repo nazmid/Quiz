@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui">
+
+
+<h:head>
+	<title>Quiz Application</title>
+	<!-- Bootstrap -->
+	<h:outputStylesheet library="webjars/bootstrap/3.0.0/css"
+		name="bootstrap.min.css" />
+	<ui:insert name="head" />
+</h:head>
+
+<h:body>	
+	<f:loadBundle basename="message" var="msg"/>
+	<div class="navbar navbar-inverse navbar-fixed-top" role="navigation">
+		<div class="container">
+			<div class="navbar-header">
+				<button type="button" class="navbar-toggle" data-toggle="collapse"
+					data-target=".navbar-collapse">
+					<span class="sr-only">Toggle navigation</span> <span
+						class="icon-bar"></span> <span class="icon-bar"></span> <span
+						class="icon-bar"></span>
+				</button>
+				<a class="navbar-brand" href="#">#{msg.appName}</a>
+			</div>
+			<div class="navbar-collapse collapse">
+				<form class="navbar-form navbar-right" role="form">
+					<div class="form-group">
+						<input type="text" placeholder="Email" class="form-control" />
+					</div>
+					<div class="form-group">
+						<input type="password" placeholder="Password" class="form-control" />
+					</div>
+					<button type="submit" class="btn btn-success">Sign in</button>
+				</form>
+			</div>
+			<!--/.navbar-collapse -->
+		</div>
+	</div>
+
+	<!-- Main jumbotron for a primary marketing message or call to action -->
+	<div class="jumbotron">
+		<div class="container">
+			<h1>Hello, world!</h1>
+			<p>#{msg.homeMessage}</p>
+		</div>
+	</div>
+
+	<div class="container">
+		<!-- Example row of columns -->
+		<div class="row"></div>
+		<ui:insert name="body" />
+		<hr />
+		<footer>
+			<p>2014</p>
+		</footer>
+	</div>
+
+	<p:ajaxStatus onstart="PF('ajaxDlg').show()"
+		oncomplete="PF('ajaxDlg').hide()">
+		<f:facet name="start">
+			<h:graphicImage value="../images/ajax-loader.gif" />
+		</f:facet>
+
+		<f:facet name="complete">
+			<h:outputText value="" />
+		</f:facet>
+	</p:ajaxStatus>
+
+	<p:dialog id="ajaxStatusDlg" modal="true" widgetVar="ajaxDlg"
+		showHeader="false" resizable="false" closable="false"
+		draggable="false" width="200px;">
+		<div style="text-align: center">
+			<h:outputText value="Please wait..." />
+			<br />
+			<p:graphicImage value="../images/ajax-loader.gif" />
+		</div>
+	</p:dialog>
+
+
+	<p:confirmDialog global="true" showEffect="fade" hideEffect="explode">
+		<div style="text-align: center;">
+		<p:commandButton value="Yes" type="button"
+			styleClass="ui-confirmdialog-yes myBtn redBtn" icon="ui-icon-check" />
+		<p:commandButton value="No" type="button"
+			styleClass="ui-confirmdialog-no myBtn greenBtn" icon="ui-icon-close" />
+			</div>
+	</p:confirmDialog>
+</h:body>
+</html>

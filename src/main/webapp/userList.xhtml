@@ -1,0 +1,116 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:p="http://primefaces.org/ui" template="/layout/template.xhtml">
+
+	<ui:define name="head">
+		<script type="text/javascript">
+			function handleLoginRequest(xhr, status, args) {
+				if (args.validationFailed || #{facesContext.validationFailed}) {
+					PF('userDlg').jq.effect("shake", {
+						times : 5
+					}, 100);
+				} else {
+					PF('userDlg').hide();
+				}
+			}
+		</script>
+
+	</ui:define>
+
+	<ui:define name="body">
+		<f:facet name="last">
+			<h:outputStylesheet name="css/userList.css" />
+		</f:facet>
+		<h:form id="mainForm">
+			<p:growl autoUpdate="true" globalOnly="true" />
+			<p:commandButton id="addNewCmd" value="#{msg.addUser}"
+				actionListener="#{userBean.addCmd}" oncomplete="PF('userDlg').show()"
+				update=":userInfo" >
+				<p:resetInput target=":userInfo" />
+			</p:commandButton>
+
+			<p:dataTable id="userTable" var="user" value="#{userBean.userList}"
+				paginator="true" paginatorPosition="bottom" rows="10"
+				rowIndexVar="index">
+
+				<p:column headerText="#" style="width:5%">
+					<h:outputText value="#{index + 1}" />
+				</p:column>
+
+				<p:column headerText="#{msg.name}" style="width:25%">
+					<h:outputText value="#{user.name}" />
+				</p:column>
+				<p:column headerText="#{msg.surname}" style="width:25%">
+					<h:outputText value="#{user.surname}" />
+				</p:column>
+				<p:column headerText="#{msg.phoneNumber}" style="width:25%">
+					<h:outputText value="#{user.phoneNumber}" />
+				</p:column>
+				<p:column style="width:20%">
+					<div style="text-align: center">
+						<p:commandButton  value="#{msg.edit}" actionListener="#{userBean.editCmd(user)}"
+							oncomplete="PF('userDlg').show()" update=":userInfo" styleClass="myBtn greenBtn">
+								<p:resetInput target=":userInfo" />
+							</p:commandButton>
+						<p:commandButton value="#{msg.delete}" actionListener="#{userBean.deleteCmd(user)}" update="userTable"
+							styleClass="myBtn redBtn">
+							<p:confirm header="Confirmation" message="#{msg.confirmDelete}" icon="ui-icon-alert" />
+						</p:commandButton>
+					</div>
+				</p:column>
+			</p:dataTable>
+		</h:form>
+
+		<p:dialog id="userInfo" widgetVar="userDlg"	resizable="false">
+			
+			<f:facet name="header">
+				<h:outputText value="#{msg.addUser}" rendered="#{userBean.newRecord}"/>
+				<h:outputText value="#{msg.editUser}" rendered="#{!userBean.newRecord}"/>
+			</f:facet>
+
+			<h:form id="dlgForm">
+				<h:panelGrid id="editGrid" columns="3" style="margin-bottom:15px">
+
+					<p:outputLabel for="nameEdt" value="#{msg.name}" />
+					<p:inputText id="nameEdt" value="#{userBean.selectedUser.name}"
+						size="20" style="margin-left:15px;" required="true" />
+					<p:message for="nameEdt" />
+					
+					<p:outputLabel for="surnameEdt" value="#{msg.surname}" />
+					<p:inputText id="surnameEdt"
+						value="#{userBean.selectedUser.surname}" size="20"
+						style="margin-left:15px;" required="true" />
+					<p:message for="surnameEdt"/>
+					
+					<p:outputLabel for="phoneNmbEdt" value="#{msg.phoneNumber}" />
+					<p:inputMask id="phoneNmbEdt"
+						value="#{userBean.selectedUser.phoneNumber}" mask="(999) 999-9999"
+						size="20" style="margin-left:15px;" />
+					<p:message for="phoneNmbEdt"/>
+					
+					<h:graphicImage id="capimg" rendered="#{userBean.newRecord}"
+						value="#{facesContext.externalContext.requestContextPath}/../Captcha.jpg"/>
+					<p:inputText id="captchaId" label="Captcha"
+						value="#{userBean.captchaVal}" size="20" rendered="#{userBean.newRecord}"
+						style="margin-left:15px;" required="true" />
+					<p:message for="captchaId" rendered="#{userBean.newRecord}"/>	
+				</h:panelGrid>
+				
+				<div style="text-align: center;">
+					<p:commandButton id="saveBtn" value="#{msg.save}"
+						actionListener="#{userBean.saveCmd}"
+						oncomplete="handleLoginRequest(xhr, status, args)" 
+						styleClass="myBtn greenBtn" update="editGrid :mainForm:userTable"  />
+
+					<p:commandButton id="cancelBtn" value="#{msg.cancel}" immediate="true"
+						styleClass="myBtn redBtn" oncomplete="PF('userDlg).hide();"  />
+				</div>
+			</h:form>
+		</p:dialog>
+
+	</ui:define>
+</ui:composition>

@@ -1,0 +1,27 @@
+.myBtn{
+	width: 80px;
+	margin-left: 5px;
+	color: white;
+}
+
+.greenBtn .ui-button-text{
+	background-color: #5cb85c;
+	text-shadow: none;
+	color: white;
+}
+
+.redBtn .ui-button-text{
+	background-color: #d9534f;
+	text-shadow: none;
+	color: white;
+}
+
+.blueBtn .ui-button-text{
+	background-color: #5bc0de;
+	text-shadow: none;
+	color: white;
+}
+
+.ui-growl {
+	 top:60px;
+}
